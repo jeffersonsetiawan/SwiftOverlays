@@ -422,7 +422,7 @@ open class SwiftOverlays: NSObject {
         let topHeight = UIApplication.shared.statusBarFrame.size.height
             + UINavigationController().navigationBar.frame.height
 
-        let height = max(topHeight, 64)
+        let height = max(notificationView.frame.height, 64)
         let width = UIScreen.main.bounds.width
 
         let frame = CGRect(x: 0, y: 0, width: width, height: height)
