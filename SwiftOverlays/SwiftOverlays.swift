@@ -257,8 +257,20 @@ open class SwiftOverlays: NSObject {
         Removes all *blocking* overlays from application's main window
     */
     open class func removeAllBlockingOverlays() {
-        let window = UIApplication.shared.delegate!.window!!
-        removeAllOverlaysFromView(window)
+        removeAllOverlaysFromView(getWindow())
+    }
+    
+    private class func getWindow() -> UIWindow {
+        if #available(iOS 13.0, *) {
+            return UIApplication.shared.connectedScenes
+                .filter({$0.activationState == .foregroundActive})
+                .map({$0 as? UIWindowScene})
+                .compactMap({$0})
+                .flatMap { $0.windows }
+                .filter({$0.isKeyWindow}).first!
+        } else {
+            return UIApplication.shared.delegate!.window!!
+        }
     }
     
     // MARK: Non-blocking
@@ -417,12 +429,7 @@ open class SwiftOverlays: NSObject {
             bannerWindow!.backgroundColor = UIColor.clear
         }
 
-        // TODO: use autolayout instead
-        // Ugly, but works
-        let topHeight = UIApplication.shared.statusBarFrame.size.height
-            + UINavigationController().navigationBar.frame.height
-
-        let height = max(topHeight, 64)
+        let height = max(notificationView.frame.height, 64)
         let width = UIScreen.main.bounds.width
 
         let frame = CGRect(x: 0, y: 0, width: width, height: height)
@@ -441,7 +448,7 @@ open class SwiftOverlays: NSObject {
             bannerWindow!.layoutIfNeeded()
 
             // Show appearing animation, schedule calling closing selector after completed
-            UIView.animate(withDuration: bannerDissapearAnimationDuration, animations: { 
+            UIView.animate(withDuration: bannerDissapearAnimationDuration, animations: {
                 let frame = notificationView.frame
                 notificationView.frame = frame.offsetBy(dx: 0, dy: frame.height)
             }, completion: { (finished) in
@@ -496,7 +503,7 @@ open class SwiftOverlays: NSObject {
     }
     
     fileprivate class func addMainWindowBlocker() -> UIView {
-        let window = UIApplication.shared.delegate!.window!!
+        let window = getWindow()
         
         let blocker = UIView(frame: window.bounds)
         blocker.backgroundColor = backgroundColor
