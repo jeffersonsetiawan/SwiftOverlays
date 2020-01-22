@@ -202,8 +202,8 @@ open class SwiftOverlays: NSObject {
         - returns: Created overlay
     */
     @discardableResult
-    open class func showBlockingWaitOverlay() -> UIView {
-        let blocker = addMainWindowBlocker()
+    open class func showBlockingWaitOverlay(window: UIWindow? = nil) -> UIView {
+        let blocker = addMainWindowBlocker(window: window)
         showCenteredWaitOverlay(blocker)
         
         return blocker
@@ -217,8 +217,8 @@ open class SwiftOverlays: NSObject {
         - returns: Created overlay
     */
     @discardableResult
-    open class func showBlockingWaitOverlayWithText(_ text: String) -> UIView {
-        let blocker = addMainWindowBlocker()
+    open class func showBlockingWaitOverlayWithText(_ text: String, window: UIWindow? = nil) -> UIView {
+        let blocker = addMainWindowBlocker(window: window)
         showCenteredWaitOverlayWithText(blocker, text: text)
         
         return blocker
@@ -232,8 +232,8 @@ open class SwiftOverlays: NSObject {
     
         - returns: Created overlay
     */
-    open class func showBlockingImageAndTextOverlay(_ image: UIImage, text: String) -> UIView  {
-        let blocker = addMainWindowBlocker()
+    open class func showBlockingImageAndTextOverlay(_ image: UIImage, text: String, window: UIWindow? = nil) -> UIView  {
+        let blocker = addMainWindowBlocker(window: window)
         showImageAndTextOverlay(blocker, image: image, text: text)
         
         return blocker
@@ -246,8 +246,8 @@ open class SwiftOverlays: NSObject {
     
         - returns: Created overlay
     */
-    open class func showBlockingTextOverlay(_ text: String) -> UIView  {
-        let blocker = addMainWindowBlocker()
+    open class func showBlockingTextOverlay(_ text: String, window: UIWindow? = nil) -> UIView  {
+        let blocker = addMainWindowBlocker(window: window)
         showTextOverlay(blocker, text: text)
         
         return blocker
@@ -256,8 +256,8 @@ open class SwiftOverlays: NSObject {
     /**
         Removes all *blocking* overlays from application's main window
     */
-    open class func removeAllBlockingOverlays() {
-        removeAllOverlaysFromView(getWindow())
+    open class func removeAllBlockingOverlays(window: UIWindow? = nil) {
+        removeAllOverlaysFromView(window ?? getWindow())
     }
     
     private class func getWindow() -> UIWindow {
@@ -502,8 +502,8 @@ open class SwiftOverlays: NSObject {
         return label
     }
     
-    fileprivate class func addMainWindowBlocker() -> UIView {
-        let window = getWindow()
+    fileprivate class func addMainWindowBlocker(window topWindow: UIWindow?) -> UIView {
+        let window = topWindow ?? getWindow()
         
         let blocker = UIView(frame: window.bounds)
         blocker.backgroundColor = backgroundColor
