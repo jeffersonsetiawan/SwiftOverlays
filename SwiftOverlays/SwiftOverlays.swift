@@ -202,7 +202,7 @@ open class SwiftOverlays: NSObject {
         - returns: Created overlay
     */
     @discardableResult
-    open class func showBlockingWaitOverlay() -> UIView {
+    @objc open class func showBlockingWaitOverlay() -> UIView {
         let blocker = addMainWindowBlocker()
         showCenteredWaitOverlay(blocker)
         
@@ -256,7 +256,7 @@ open class SwiftOverlays: NSObject {
     /**
         Removes all *blocking* overlays from application's main window
     */
-    open class func removeAllBlockingOverlays() {
+    @objc open class func removeAllBlockingOverlays() {
         let window = UIApplication.shared.delegate!.window!!
         removeAllOverlaysFromView(window)
     }
